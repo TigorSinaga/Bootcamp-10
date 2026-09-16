@@ -1,0 +1,306 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #1e293b;
+  background-color: #f8fafc;
+}
+
+a {
+  color: #e2e8f0;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+/* =========================
+     SECTION 1 : MENU
+  ========================= */
+.navbar {
+  width: 100%;
+  padding: 15px 30px;
+  background-color: #0f172a;
+  color: white;
+  border-bottom: 3px solid #38bdf8;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand {
+  font-size: 20px;
+  color: #ffffff;
+}
+
+.navbar-menu {
+  display: flex;
+  gap: 25px;
+}
+
+/* =========================
+     SECTION 2 : HEADER
+  ========================= */
+.header {
+  width: 100%;
+  padding: 70px 10%;
+  background-color: #e0f2fe;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.header-content {
+  width: 50%;
+}
+
+.header-content h2 {
+  color: #0f172a;
+  font-size: 36px;
+  margin-bottom: 15px;
+}
+
+.header-content p {
+  color: #475569;
+  line-height: 1.7;
+}
+
+.header-image {
+  width: 50%;
+  text-align: center;
+}
+
+.header-image img {
+  width: 50%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 15px;
+  border: 5px solid white;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
+}
+
+.header-content button {
+  padding: 12px 22px;
+  margin-top: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: #0284c7;
+  color: white;
+  font-weight: bold;
+}
+
+.header-content button:hover {
+  background-color: #0369a1;
+}
+
+hr {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid #cbd5e1;
+}
+
+/* =========================
+     SECTION 3 : BIODATA
+  ========================= */
+.biodata {
+  padding: 60px 10%;
+  background-color: #ffffff;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.section-title h2 {
+  margin-bottom: 5px;
+  color: #0f172a;
+  font-size: 30px;
+}
+
+.section-title p {
+  color: #64748b;
+}
+
+.biodata-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  text-align: center;
+}
+
+.biodata-item {
+  padding: 20px;
+  border: 1px solid #bae6fd;
+  border-radius: 10px;
+  background-color: #f0f9ff;
+  color: #0f172a;
+  transition: 0.3s;
+}
+
+.biodata-item:hover {
+  transform: translateY(-5px);
+  background-color: #e0f2fe;
+  border-color: #38bdf8;
+}
+
+.biodata-item a {
+  color: #0284c7;
+}
+
+.biodata-item a:hover {
+  color: #0369a1;
+}
+
+/* =========================
+     SECTION 4 : PORTOFOLIO
+  ========================= */
+.portofolio {
+  padding: 60px 10%;
+  background-color: #f1f5f9;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.portfolio-item {
+  padding: 20px;
+  text-align: center;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 5px 15px rgba(15, 23, 42, 0.08);
+  transition: 0.3s;
+}
+
+.portfolio-item:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 12px 25px rgba(15, 23, 42, 0.15);
+  border-color: #38bdf8;
+}
+
+.portfolio-item img {
+  width: 350px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.portfolio-item h4 {
+  margin-bottom: 10px;
+  color: #0284c7;
+  font-size: 20px;
+}
+
+.portfolio-item p {
+  text-align: justify;
+  line-height: 1.6;
+  color: #475569;
+}
+
+/* =========================
+     RESPONSIVE TABLET
+  ========================= */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 15px 20px;
+  }
+
+  .navbar-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .header {
+    padding: 50px 5%;
+  }
+
+  .header-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .header-content,
+  .header-image {
+    width: 100%;
+  }
+
+  .header-content h2 {
+    font-size: 30px;
+  }
+
+  .header-image img {
+    width: 60%;
+  }
+
+  .biodata {
+    padding: 50px 5%;
+  }
+
+  .biodata-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portofolio {
+    padding: 50px 5%;
+  }
+
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+     RESPONSIVE HP
+  ========================= */
+@media (max-width: 480px) {
+  .navbar-menu {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header {
+    padding: 40px 20px;
+  }
+
+  .header-content h2 {
+    font-size: 26px;
+  }
+
+  .header-image img {
+    width: 80%;
+  }
+
+  .biodata,
+  .portofolio {
+    padding: 40px 20px;
+  }
+
+  .section-title h2 {
+    font-size: 26px;
+  }
+
+  .portfolio-item p {
+    text-align: left;
+  }
+}
