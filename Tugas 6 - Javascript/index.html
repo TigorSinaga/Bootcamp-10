@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>GoreStore | Modern E-Commerce</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <span class="brand-icon">
+            <i class="bi bi-bag-heart-fill"></i>
+          </span>
+          NusaStore
+        </a>
+
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMenu">
+          <ul class="navbar-nav ms-auto me-lg-4">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">Home</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="#products">Products</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="#footer">About</a>
+            </li>
+          </ul>
+
+          <button class="btn cart-button position-relative">
+            <i class="bi bi-cart3"></i>
+            <span class="d-none d-sm-inline ms-1">Cart</span>
+
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"> 0 </span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero-section">
+      <div class="container">
+        <div class="row align-items-center gy-5">
+          <div class="col-lg-6">
+            <span class="hero-label">
+              <i class="bi bi-stars"></i>
+              New Shopping Experience
+            </span>
+
+            <h1 class="hero-title">
+              Temukan produk terbaik untuk
+              <span>kebutuhanmu.</span>
+            </h1>
+
+            <p class="hero-description">Jelajahi berbagai pilihan produk elektronik, fashion, perlengkapan rumah, olahraga, dan aksesoris dengan pengalaman belanja yang sederhana dan modern.</p>
+
+            <div class="d-flex flex-wrap gap-3">
+              <a href="#products" class="btn btn-primary-custom">
+                Mulai Belanja
+                <i class="bi bi-arrow-right ms-2"></i>
+              </a>
+
+              <a href="#products" class="btn btn-outline-custom"> Lihat Produk </a>
+            </div>
+
+            <div class="hero-stats">
+              <div>
+                <strong>50+</strong>
+                <span>Products</span>
+              </div>
+
+              <div>
+                <strong>5</strong>
+                <span>Categories</span>
+              </div>
+
+              <div>
+                <strong>100%</strong>
+                <span>Responsive</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="hero-image-wrapper">
+              <div class="hero-circle"></div>
+
+              <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=80" alt="Shopping" class="hero-image" />
+
+              <div class="floating-card floating-card-one">
+                <i class="bi bi-truck"></i>
+                <div>
+                  <strong>Fast Delivery</strong>
+                  <small>Pengiriman cepat</small>
+                </div>
+              </div>
+
+              <div class="floating-card floating-card-two">
+                <i class="bi bi-shield-check"></i>
+                <div>
+                  <strong>Secure</strong>
+                  <small>Belanja lebih aman</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Products -->
+    <main id="products" class="products-section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <span class="section-label">OUR PRODUCTS</span>
+            <h2>Explore Our Products</h2>
+            <p>Temukan produk yang sesuai dengan kebutuhan dan gaya hidupmu.</p>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-wrapper">
+          <div class="row g-3 align-items-end">
+            <div class="col-lg-5">
+              <label class="form-label">Search Product</label>
+
+              <div class="search-input">
+                <i class="bi bi-search"></i>
+
+                <input type="text" id="searchInput" class="form-control" placeholder="Cari nama produk..." />
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+              <label class="form-label">Category</label>
+
+              <select id="categoryFilter" class="form-select">
+                <option value="all">Semua Kategori</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+              <label class="form-label">Sort By</label>
+
+              <select id="sortFilter" class="form-select">
+                <option value="default">Default</option>
+                <option value="name-asc">Nama A - Z</option>
+                <option value="name-desc">Nama Z - A</option>
+                <option value="price-asc">Harga Terendah</option>
+                <option value="price-desc">Harga Tertinggi</option>
+              </select>
+            </div>
+
+            <div class="col-lg-1">
+              <button id="resetFilter" class="btn reset-button w-100" title="Reset Filter">
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-information d-flex justify-content-between align-items-center">
+          <p class="mb-0">
+            Menampilkan
+            <strong id="productCount">0</strong>
+            produk
+          </p>
+
+          <div class="view-text">
+            <i class="bi bi-grid-3x3-gap"></i>
+            Grid View
+          </div>
+        </div>
+
+        <!-- Product List -->
+        <div class="row g-4" id="productList"></div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state d-none">
+          <div class="empty-icon">
+            <i class="bi bi-search"></i>
+          </div>
+
+          <h4>Produk tidak ditemukan</h4>
+
+          <p>Coba gunakan kata kunci atau pilih kategori yang berbeda.</p>
+
+          <button class="btn btn-primary-custom" onclick="resetFilters()">Reset Filter</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-5">
+            <a class="footer-brand" href="#">
+              <i class="bi bi-bag-heart-fill"></i>
+              NusaStore
+            </a>
+
+            <p>Platform e-commerce sederhana yang dibangun menggunakan Bootstrap 5 dan JavaScript.</p>
+          </div>
+
+          <div class="col-6 col-lg-2">
+            <h6>Menu</h6>
+
+            <a href="#">Home</a>
+            <a href="#products">Products</a>
+            <a href="#">Categories</a>
+          </div>
+
+          <div class="col-6 col-lg-2">
+            <h6>Support</h6>
+
+            <a href="#">Help Center</a>
+            <a href="#">Shipping</a>
+            <a href="#">Returns</a>
+          </div>
+
+          <div class="col-lg-3">
+            <h6>Follow Us</h6>
+
+            <div class="social-icons">
+              <a href="#"><i class="bi bi-instagram"></i></a>
+              <a href="#"><i class="bi bi-facebook"></i></a>
+              <a href="#"><i class="bi bi-twitter-x"></i></a>
+              <a href="#"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="footer-bottom">
+          <span>© 2026 NusaStore. All rights reserved.</span>
+
+          <span>Made with Bootstrap 5</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Product Detail Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <button type="button" class="btn-close modal-close" data-bs-dismiss="modal"></button>
+
+          <div class="modal-body p-0">
+            <div class="row g-0">
+              <div class="col-md-6">
+                <img id="modalImage" src="" alt="" class="modal-product-image" />
+              </div>
+
+              <div class="col-md-6">
+                <div class="modal-product-content">
+                  <span id="modalCategory" class="product-category"></span>
+
+                  <h2 id="modalName"></h2>
+
+                  <div id="modalPrice" class="modal-price"></div>
+
+                  <p id="modalDescription"></p>
+
+                  <button id="modalCartButton" class="btn btn-primary-custom w-100">
+                    <i class="bi bi-cart-plus me-2"></i>
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <i class="bi bi-check-circle-fill text-success me-2"></i>
+
+          <strong class="me-auto">NusaStore</strong>
+
+          <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+
+        <div class="toast-body">Produk berhasil ditambahkan ke keranjang.</div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+  </body>
+</html>
