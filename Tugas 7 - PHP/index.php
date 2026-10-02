@@ -1,0 +1,2 @@
+buatkan form input produk (nama produk, harga, deskripsi, kategori, stok, gambar) menggunakan html. dan proses datanya menggunakan PHP tanpa menyimpannya ke database. tambahkan validasi sederhana untuk memastikan semua field di isi.
+pisahkan file form dan file proses datanya 
