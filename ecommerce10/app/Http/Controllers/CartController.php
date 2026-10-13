@@ -2,64 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
-use Illuminate\Http\Request;
-
 class CartController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-    }
+        $items = [
+            [
+                'id' => 1,
+                'name' => 'Sweatshirt Essential Cotton',
+                'category' => 'Fashion',
+                'variant' => 'Cream / M',
+                'image' => 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=300&q=80',
+                'price' => 189000,
+                'quantity' => 1,
+            ],
+            [
+                'id' => 2,
+                'name' => 'Headphone Wireless SoundPro',
+                'category' => 'Elektronik',
+                'variant' => 'Butter Yellow',
+                'image' => 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=300&q=80',
+                'price' => 549000,
+                'quantity' => 1,
+            ],
+        ];
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        $subtotal = array_sum(array_map(
+            fn (array $item) => $item['price'] * $item['quantity'],
+            $items,
+        ));
+        $shippingFee = $subtotal >= 100000 ? 0 : 12000;
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Cart $cart)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Cart $cart)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Cart $cart)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Cart $cart)
-    {
-        //
+        return view('cart.index', [
+            'items' => $items,
+            'cartCount' => array_sum(array_column($items, 'quantity')),
+            'subtotal' => $subtotal,
+            'shippingFee' => $shippingFee,
+            'total' => $subtotal + $shippingFee,
+        ]);
     }
 }
