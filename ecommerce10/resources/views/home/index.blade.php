@@ -62,7 +62,7 @@
                 <div><strong>Flash sale hari ini</strong><span>Jangan sampai kehabisan, harga spesial segera berakhir!</span></div>
             </div>
             <div class="countdown" aria-label="Waktu flash sale tersisa"><span class="time-box">05</span><span class="time-separator">:</span><span class="time-box">42</span><span class="time-separator">:</span><span class="time-box">18</span></div>
-            <a class="section-link" href="/products">Lihat semua <span aria-hidden="true">→</span></a>
+            <a class="section-link" href="/search">Lihat semua <span aria-hidden="true">→</span></a>
         </div>
 
         <div class="section-heading product-heading">
@@ -70,26 +70,31 @@
                 <div class="section-kicker">Dikurasi khusus untukmu</div>
                 <h2>Produk pilihan minggu ini</h2>
             </div>
-            <a class="section-link" href="/products">Jelajahi produk <span aria-hidden="true">→</span></a>
+            <a class="section-link" href="/search">Jelajahi produk <span aria-hidden="true">→</span></a>
         </div>
         <div class="filter-row" role="group" aria-label="Filter produk">
             <button class="filter-btn active" type="button" data-filter="semua">Semua</button>
-            @foreach ($filters as $category)
+            @foreach ($categories as $category)
             <button class="filter-btn" type="button" data-filter="{{ $category['slug'] }}">{{ $category['name'] }}</button>
             @endforeach
         </div>
         <div class="product-grid" id="product-grid">
             @foreach ($products as $product)
-            <article class="product-card" data-category="{{ $product['category'] }}" data-name="{{ mb_strtolower($product['name']) }}">
+            <article class="product-card" data-category="{{ $product->product_category?->slug ?? '' }}" data-category-name="{{ $product->product_category?->name ?? '' }}" data-name="{{ $product->name }}">
                 <div class="product-photo">
                     <img src="{{ $product['image'] }}" alt="{{ $product['image_alt'] }}">
                     <span class="product-badge">{{ $product['badge'] }}</span>
-                    <button class="favorite-btn" type="button" aria-label="Tambahkan {{ $product['name'] }} ke wishlist">♡</button>
+                    <button class="favorite-btn" type="button" aria-label="Tambahkan {{ $product -> name }} ke wishlist">♡</button>
                 </div>
                 <div class="product-info">
+                    <div class="category-row">
+                        <span class="product-category">{{ $product->product_category?->name ?? '' }}</span>
+                    </div>
                     <span class="product-category">{{ $product['category_name'] }}</span>
-                    <a class="product-name" href="/products">{{ $product['name'] }}</a>
-                    <div class="rating">★ {{ $product['rating'] }} <span>({{ $product['review_count'] }} ulasan)</span></div>
+                    <a class="product-name" href="/search">{{ $product -> name }}</a>
+                    <div class="description">
+                        <p>{{ $product['description'] }}</p>
+                    </div>
                     <div class="price-row">
                         <span class="price">Rp{{ number_format($product['price'], 0, ',', '.') }}</span>
                         <span class="old-price">Rp{{ number_format($product['original_price'], 0, ',', '.') }}</span>
@@ -99,6 +104,8 @@
             </article>
             @endforeach
         </div>
+        <div class="mt-4"> {{ $products->links('pagination::bootstrap-5') }}</div>
+
         <div class="promo-strip" id="promo">
             <div class="promo-copy"><span>Spesial untuk member baru</span>
                 <h2>Diskon 15% untuk belanja pertamamu</h2>
@@ -136,7 +143,12 @@
 
         productCards.forEach((card) => {
             const matchesCategory = activeCategory === 'semua' || card.dataset.category === activeCategory;
-            const matchesSearch = card.dataset.name.includes(query) || card.dataset.category.includes(query);
+            const searchableText = [
+                card.dataset.name,
+                card.dataset.category,
+                card.dataset.categoryName
+            ].join(' ').toLocaleLowerCase('id');
+            const matchesSearch = searchableText.includes(query);
             card.hidden = !(matchesCategory && matchesSearch);
             if (!card.hidden) visibleCount += 1;
         });

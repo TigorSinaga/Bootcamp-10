@@ -755,6 +755,186 @@ footer {
     text-align: center;
 }
 
+.search-page {
+    padding-bottom: 48px;
+}
+.search-breadcrumb {
+    padding-top: 22px;
+    color: var(--muted);
+    font-size: 0.75rem;
+}
+.search-breadcrumb ol {
+    display: flex;
+    gap: 9px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.search-breadcrumb li + li::before {
+    content: "/";
+    margin-right: 9px;
+    color: #b7b7c4;
+}
+.search-breadcrumb a {
+    color: var(--purple);
+    font-weight: 650;
+}
+.search-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: center;
+    gap: 36px;
+    margin-top: 18px;
+    padding: 32px 38px;
+    border: 1px solid #e8e4ff;
+    border-radius: 20px;
+    background: linear-gradient(110deg, #f0edff 0%, #fff 78%);
+}
+.search-panel-copy h1 {
+    margin: 0 0 8px;
+    color: var(--ink);
+    font-size: clamp(1.6rem, 3vw, 2.15rem);
+    font-weight: 850;
+    letter-spacing: -1px;
+}
+.search-panel-copy p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+.search-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+    align-items: end;
+    gap: 12px;
+}
+.search-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #68697e;
+    font-size: 0.72rem;
+    font-weight: 750;
+}
+.search-field input,
+.search-field select {
+    width: 100%;
+    min-height: 45px;
+    padding: 0 13px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    outline: none;
+    color: var(--ink);
+    background: #fff;
+    font-size: 0.82rem;
+}
+.search-field input:focus,
+.search-field select:focus {
+    border-color: #b4a5ff;
+    box-shadow: 0 0 0 3px #6c4cf11c;
+}
+.search-form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 2px;
+}
+.search-form-actions .primary-btn {
+    min-height: 40px;
+    padding-inline: 16px;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+.search-reset {
+    color: var(--muted);
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+.search-reset:hover {
+    color: var(--purple);
+}
+.search-results {
+    padding-top: 38px;
+}
+.search-results .section-heading {
+    margin-bottom: 18px;
+}
+.search-result-count {
+    margin: 7px 0 0;
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+.search-result-count strong {
+    color: var(--ink);
+}
+.search-product-description {
+    min-height: 2.7em;
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 1.45;
+}
+.search-stock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 0.7rem;
+}
+.search-stock strong {
+    padding: 4px 8px;
+    border-radius: 99px;
+    color: #25835b;
+    background: #eaf8f1;
+    font-size: 0.68rem;
+}
+.search-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 26px;
+}
+.search-pagination .pagination {
+    gap: 5px;
+}
+.search-pagination .page-link {
+    border-color: var(--line);
+    border-radius: 8px;
+    color: var(--purple);
+    font-size: 0.8rem;
+}
+.search-pagination .page-item.active .page-link {
+    border-color: var(--purple);
+    color: #fff;
+    background: var(--purple);
+}
+.search-page .empty-state {
+    padding: 48px 24px;
+    border-style: solid;
+    border-color: var(--line);
+    box-shadow: 0 8px 26px #28204708;
+}
+.search-empty-icon {
+    margin-bottom: 8px;
+    color: var(--purple);
+    font-size: 2.5rem;
+}
+.search-page .empty-state h3 {
+    margin: 0 0 7px;
+    color: var(--ink);
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+.search-page .empty-state p {
+    margin: 0 0 18px;
+    font-size: 0.82rem;
+}
+.search-page .empty-state .primary-btn {
+    min-height: 40px;
+    font-size: 0.78rem;
+}
+
 @media (max-width: 900px) {
     .nav-inner {
         gap: 18px;
@@ -780,6 +960,10 @@ footer {
     }
     .product-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .search-panel {
+        grid-template-columns: 1fr;
+        gap: 22px;
     }
 }
 
@@ -908,6 +1092,26 @@ footer {
     }
     .product-grid {
         gap: 10px;
+    }
+    .search-page {
+        padding-bottom: 32px;
+    }
+    .search-panel {
+        gap: 18px;
+        margin-top: 12px;
+        padding: 23px 19px;
+        border-radius: 16px;
+    }
+    .search-form {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .search-form-actions {
+        grid-column: auto;
+        margin-top: 4px;
+    }
+    .search-results {
+        padding-top: 30px;
     }
     .product-info {
         padding: 10px;
