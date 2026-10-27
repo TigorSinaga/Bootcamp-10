@@ -10,7 +10,6 @@
         <form class="search-box" role="search" action="{{ route('search') }}" method="GET">
             <span class="search-icon" aria-hidden="true">⌕</span>
             <input id="product-search" type="search" name="search" value="{{ request('search') }}" placeholder="Cari produk, brand, atau kategori..." aria-label="Cari produk">
-            <span class="search-shortcut">⌘ K</span>
         </form>
         <div class="header-actions">
             <a class="header-action" href="#produk" aria-label="Wishlist"><span class="action-icon">♡</span><span>Wishlist</span></a>

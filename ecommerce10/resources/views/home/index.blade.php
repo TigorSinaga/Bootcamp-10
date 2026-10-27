@@ -3,6 +3,9 @@
 @section('title', 'RuangBelanja — Temukan yang kamu suka')
 
 @section('content')
+@php
+    /** @var \Illuminate\Pagination\LengthAwarePaginator $products */
+@endphp
 @include('template.navbar')
 
 <main class="page-content">
@@ -33,10 +36,9 @@
         </div>
         <div class="category-grid">
             @foreach ($categories as $category)
-            <a class="category-card" href="#produk" data-category-link="{{ $category['slug'] }}">
-                <span class="category-emoji {{ $category['style'] }}">{{ $category['icon'] }}</span>
-                <strong>{{ $category['name'] }}</strong>
-                <small>{{ $category['product_count'] }} produk</small>
+            <a class="category-card" href="{{ route('search', ['category' => [$category->id]]) }}">
+                <strong>{{ $category->name }}</strong>
+                <small>{{ $category->products_count }} produk</small>
             </a>
             @endforeach
         </div>
@@ -75,31 +77,28 @@
         <div class="filter-row" role="group" aria-label="Filter produk">
             <button class="filter-btn active" type="button" data-filter="semua">Semua</button>
             @foreach ($categories as $category)
-            <button class="filter-btn" type="button" data-filter="{{ $category['slug'] }}">{{ $category['name'] }}</button>
+            <button class="filter-btn" type="button" data-filter="{{ $category->slug }}">{{ $category->name }}</button>
             @endforeach
         </div>
         <div class="product-grid" id="product-grid">
             @foreach ($products as $product)
             <article class="product-card" data-category="{{ $product->product_category?->slug ?? '' }}" data-category-name="{{ $product->product_category?->name ?? '' }}" data-name="{{ $product->name }}">
                 <div class="product-photo">
-                    <img src="{{ $product['image'] }}" alt="{{ $product['image_alt'] }}">
-                    <span class="product-badge">{{ $product['badge'] }}</span>
-                    <button class="favorite-btn" type="button" aria-label="Tambahkan {{ $product -> name }} ke wishlist">♡</button>
+                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy">
+                    <button class="favorite-btn" type="button" aria-label="Tambahkan {{ $product->name }} ke wishlist">♡</button>
                 </div>
                 <div class="product-info">
-                    <div class="category-row">
-                        <span class="product-category">{{ $product->product_category?->name ?? '' }}</span>
-                    </div>
-                    <span class="product-category">{{ $product['category_name'] }}</span>
-                    <a class="product-name" href="/search">{{ $product -> name }}</a>
-                    <div class="description">
-                        <p>{{ $product['description'] }}</p>
-                    </div>
+                    <span class="product-category">{{ $product->product_category?->name ?? '' }}</span>
+                    <a class="product-name" href="{{ route('search', ['search' => $product->name]) }}">{{ $product->name }}</a>
+                    <p class="product-description">{{ \Illuminate\Support\Str::limit($product->description, 90) }}</p>
                     <div class="price-row">
-                        <span class="price">Rp{{ number_format($product['price'], 0, ',', '.') }}</span>
-                        <span class="old-price">Rp{{ number_format($product['original_price'], 0, ',', '.') }}</span>
+                        <span class="price">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
                     </div>
-                    <button class="add-btn" type="button">+ Tambah ke keranjang</button>
+                    <form action="{{ route('cart.items.store') }}" method="POST" class="add-to-cart-form">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <button class="add-btn" type="submit">+ Tambah ke keranjang</button>
+                    </form>
                 </div>
             </article>
             @endforeach
@@ -124,17 +123,15 @@
 </main>
 
 @include('template.footer')
-<div class="toast-message" id="toast-message" role="status" aria-live="polite"></div>
+<div class="toast-message" id="toast-message" role="status" aria-live="polite" data-message="{{ session('success') ?? session('error') }}"></div>
 
 @push('scripts')
 <script>
     const productCards = [...document.querySelectorAll('.product-card')];
     const filterButtons = [...document.querySelectorAll('.filter-btn')];
     const searchInput = document.querySelector('#product-search');
-    const cartCount = document.querySelector('#cart-count');
     const toast = document.querySelector('#toast-message');
     let activeCategory = 'semua';
-    let cartItems = 0;
     let toastTimeout;
 
     function updateProducts() {
@@ -176,29 +173,13 @@
         button.addEventListener('click', () => selectCategory(button.dataset.filter));
     });
 
-    document.querySelectorAll('[data-category-link]').forEach((link) => {
-        link.addEventListener('click', () => {
-            const category = link.dataset.categoryLink;
-            if (filterButtons.some((button) => button.dataset.filter === category)) {
-                selectCategory(category);
-            } else {
-                selectCategory('semua');
-            }
-        });
-    });
-
     searchInput.addEventListener('input', updateProducts);
 
-    document.querySelectorAll('.add-btn').forEach((button) => {
-        button.addEventListener('click', () => {
-            cartItems += 1;
-            cartCount.textContent = cartItems;
-            toast.textContent = 'Produk ditambahkan ke keranjang';
-            toast.classList.add('show');
-            window.clearTimeout(toastTimeout);
-            toastTimeout = window.setTimeout(() => toast.classList.remove('show'), 2200);
-        });
-    });
+    if (toast.dataset.message) {
+        toast.textContent = toast.dataset.message;
+        toast.classList.add('show');
+        toastTimeout = window.setTimeout(() => toast.classList.remove('show'), 2600);
+    }
 
     document.querySelectorAll('.favorite-btn').forEach((button) => {
         button.addEventListener('click', () => {

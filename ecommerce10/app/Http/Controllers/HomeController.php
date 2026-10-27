@@ -18,16 +18,7 @@ class HomeController extends Controller
 
 
 
-        $categories = [
-            ['slug' => 'fashion', 'name' => 'Fashion', 'icon' => '👕', 'style' => 'cat-fashion', 'product_count' => '120+'],
-            ['slug' => 'elektronik', 'name' => 'Elektronik', 'icon' => '🎧', 'style' => 'cat-tech', 'product_count' => '86+'],
-            ['slug' => 'rumah', 'name' => 'Rumah & Living', 'icon' => '🪴', 'style' => 'cat-home', 'product_count' => '94+'],
-            ['slug' => 'kecantikan', 'name' => 'Kecantikan', 'icon' => '🧴', 'style' => 'cat-beauty', 'product_count' => '68+'],
-            ['slug' => 'olahraga', 'name' => 'Olahraga', 'icon' => '🏃', 'style' => 'cat-sports', 'product_count' => '52+'],
-            ['slug' => 'makanan', 'name' => 'Makanan', 'icon' => '☕', 'style' => 'cat-food', 'product_count' => '73+'],
-        ];
-
-        $categories = ProductCategory::all();
+        $categories = ProductCategory::withCount('products')->get();
         return view(
             'home.index',
             compact('products', 'categories')
@@ -37,7 +28,23 @@ class HomeController extends Controller
     public function search(Request $request): View
     {
         $search = trim((string) $request->input('search', ''));
-        $category = $request->input('category', '');
+        $categoryInput = $request->input('category', []);
+        $request->merge([
+            'category' => is_array($categoryInput)
+                ? $categoryInput
+                : ($categoryInput === '' ? [] : [$categoryInput]),
+        ]);
+        $filters = $request->validate([
+            'category' => ['array'],
+            'category.*' => ['integer', 'exists:product_categories,id'],
+            'min_price' => ['nullable', 'numeric', 'min:0'],
+            'max_price' => ['nullable', 'numeric', 'min:0'],
+            'sort' => ['nullable', 'in:latest,price_desc,price_asc'],
+        ]);
+        $category = $filters['category'] ?? [];
+        $minPrice = $filters['min_price'] ?? '';
+        $maxPrice = $filters['max_price'] ?? '';
+        $sort = $filters['sort'] ?? 'latest';
         $query = Product::query()
             ->where('stock', '>', 0)
             ->with('product_category');
@@ -52,16 +59,30 @@ class HomeController extends Controller
             });
         }
 
-        if ($category !== '') {
-            $query->where('product_category_id', $category);
+        if ($category !== []) {
+            $query->whereIn('product_category_id', $category);
         }
 
         $categories = ProductCategory::all();
-        $products = $query->orderBy('name')->paginate(12)->withQueryString();
+        if ($minPrice !== '') {
+            $query->where('price', '>=', $minPrice);
+        }
+
+        if ($maxPrice !== '') {
+            $query->where('price', '<=', $maxPrice);
+        }
+
+        match ($sort) {
+            'price_desc' => $query->orderByDesc('price'),
+            'price_asc' => $query->orderBy('price'),
+            default => $query->latest(),
+        };
+
+        $products = $query->paginate(12)->withQueryString();
 
         return view(
             'home.search',
-            compact('products', 'categories', 'search', 'category')
+            compact('products', 'categories', 'search', 'category', 'minPrice', 'maxPrice', 'sort')
         );
     }
 }
