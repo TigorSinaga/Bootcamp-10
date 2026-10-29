@@ -6,6 +6,9 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -50,7 +53,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = ProductCategory::orderBy('name')->get();
+        return view('admin.products.create', compact('categories'));
     }
 
     /**
@@ -58,7 +62,22 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', 'unique:products,name'],
+            'description' => ['required', 'string', 'max:5000'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'product_category_id' => ['required', 'exists:product_categories,id'],
+            'cropped_image' => ['required', 'string'],
+        ]);
+
+        $validated['slug'] = $this->uniqueSlug($validated['name']);
+        $validated['is_active'] = $request->boolean('is_active', true);
+        $validated['image'] = $this->storeCroppedImage($validated['cropped_image']);
+        unset($validated['cropped_image']);
+
+        Product::create($validated);
+        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan.');
     }
 
     /**
@@ -75,7 +94,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $categories = ProductCategory::orderBy('name')->get();
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -83,7 +103,31 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', Rule::unique('products', 'name')->ignore($product->id)],
+            'description' => ['required', 'string', 'max:5000'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'product_category_id' => ['required', 'exists:product_categories,id'],
+            'cropped_image' => ['nullable', 'string'],
+        ]);
+
+        if ($validated['name'] !== $product->name) {
+            $validated['slug'] = $this->uniqueSlug($validated['name'], $product->id);
+        }
+        $validated['is_active'] = $request->boolean('is_active', true);
+
+        if (!empty($validated['cropped_image'])) {
+            $oldImage = $product->image;
+            $validated['image'] = $this->storeCroppedImage($validated['cropped_image']);
+            if ($oldImage && Storage::disk('public')->exists($oldImage)) {
+                Storage::disk('public')->delete($oldImage);
+            }
+        }
+        unset($validated['cropped_image']);
+
+        $product->update($validated);
+        return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui.');
     }
 
     /**
@@ -91,6 +135,40 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
+        }
+        $product->delete();
+        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus.');
+    }
+
+    private function uniqueSlug(string $name, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($name);
+        $slug = $base;
+        $number = 2;
+
+        while (Product::where('slug', $slug)->when($ignoreId, fn ($query) => $query->where('id', '!=', $ignoreId))->exists()) {
+            $slug = $base . '-' . $number++;
+        }
+
+        return $slug;
+    }
+
+    private function storeCroppedImage(string $imageData): string
+    {
+        if (!preg_match('/^data:image\/([a-zA-Z0-9]+);base64,(.+)$/s', $imageData, $matches)) {
+            abort(422, 'Format gambar tidak valid.');
+        }
+
+        $extension = strtolower($matches[1] === 'jpeg' ? 'jpg' : $matches[1]);
+        $decoded = base64_decode($matches[2], true);
+        if ($decoded === false || !in_array($extension, ['jpg', 'jpeg', 'png', 'webp'])) {
+            abort(422, 'Format gambar tidak valid.');
+        }
+
+        $path = 'products/' . Str::uuid() . '.' . $extension;
+        Storage::disk('public')->put($path, $decoded);
+        return $path;
     }
 }

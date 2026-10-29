@@ -34,7 +34,7 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         ]);
     })->name('dashboard');
     Route::resource('products', \App\Http\Controllers\ProductController::class);
-    Route::resource('product-categories', \App\Http\Controllers\ProductCategoryController::class);
+    Route::resource('product-categories', \App\Http\Controllers\ProductCategoryController::class)->except(['show', 'create', 'edit']);
 });
 
 Route::middleware('auth')->group(function () {

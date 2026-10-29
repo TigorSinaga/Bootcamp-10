@@ -23,9 +23,10 @@ class ProductCategoryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+
     public function create()
     {
-        return view('admin.product_categories.create');
+        return redirect()->route('product-categories.index');
     }
 
     /**
@@ -38,20 +39,14 @@ class ProductCategoryController extends Controller
         return redirect()->route('product-categories.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ProductCategory $productCategory)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(ProductCategory $productCategory)
     {
-        return view('admin.product_categories.edit', compact('productCategory'));
+        return redirect()->route('product-categories.index');
     }
 
     public function update(Request $request, ProductCategory $productCategory)
