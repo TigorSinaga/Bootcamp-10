@@ -8,9 +8,10 @@
         <title>RuangBelanja — Profil</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ filemtime(public_path('css/style.css')) }}">
+        @stack('styles')
     </head>
     <body class="app-page">
-        @include('template.navbar')
+        @include('layouts.navigation')
         @isset($header)
             <header class="page-content app-page-heading">{{ $header }}</header>
         @endisset

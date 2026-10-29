@@ -21,9 +21,21 @@ Route::get('checkout', [OrderController::class, 'create'])->name('checkout');
 Route::post('checkout', [OrderController::class, 'store'])->name('checkout.store');
 Route::get('invoice', [OrderController::class, 'invoice'])->name('invoice');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::prefix('dashboard')->middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return view('dashboard', [
+            'productCount' => \App\Models\Product::count(),
+            'categoryCount' => \App\Models\ProductCategory::count(),
+            'orderCount' => \App\Models\Order::count(),
+            'totalRevenue' => \App\Models\Order::where('status', '!=', 'cancelled')->sum('total_amount'),
+            'lowStockCount' => \App\Models\Product::where('stock', '<=', 10)->count(),
+            'latestProducts' => \App\Models\Product::with('product_category')->latest()->take(5)->get(),
+            'latestOrders' => \App\Models\Order::with('user')->latest()->take(5)->get(),
+        ]);
+    })->name('dashboard');
+    Route::resource('products', \App\Http\Controllers\ProductController::class);
+    Route::resource('product-categories', \App\Http\Controllers\ProductCategoryController::class);
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

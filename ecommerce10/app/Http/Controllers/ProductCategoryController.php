@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProductCategoryController extends Controller
 {
@@ -12,7 +13,11 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = ProductCategory::withCount('products')
+            ->withSum('products', 'stock')
+            ->orderBy('name')
+            ->get();
+        return view('admin.product_categories.index', compact('categories'));
     }
 
     /**
@@ -20,7 +25,7 @@ class ProductCategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.product_categories.create');
     }
 
     /**
@@ -28,7 +33,9 @@ class ProductCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate(['name' => ['required', 'string', 'max:255', 'unique:product_categories,name']]);
+        ProductCategory::create(['name' => $validated['name'], 'slug' => Str::slug($validated['name'])]);
+        return redirect()->route('product-categories.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
 
     /**
@@ -44,22 +51,19 @@ class ProductCategoryController extends Controller
      */
     public function edit(ProductCategory $productCategory)
     {
-        //
+        return view('admin.product_categories.edit', compact('productCategory'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, ProductCategory $productCategory)
     {
-        //
+        $validated = $request->validate(['name' => ['required', 'string', 'max:255', 'unique:product_categories,name,' . $productCategory->id]]);
+        $productCategory->update(['name' => $validated['name'], 'slug' => Str::slug($validated['name'])]);
+        return redirect()->route('product-categories.index')->with('success', 'Kategori berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(ProductCategory $productCategory)
     {
-        //
+        $productCategory->delete();
+        return redirect()->route('product-categories.index')->with('success', 'Kategori berhasil dihapus.');
     }
 }

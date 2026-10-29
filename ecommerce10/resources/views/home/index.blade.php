@@ -84,7 +84,7 @@
             @foreach ($products as $product)
             <article class="product-card" data-category="{{ $product->product_category?->slug ?? '' }}" data-category-name="{{ $product->product_category?->name ?? '' }}" data-name="{{ $product->name }}">
                 <div class="product-photo">
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy">
+                    <img src="{{ asset('storage/' . $product->image) }}" data-fallback="{{ asset('images/product-placeholder.svg') }}" onerror="this.onerror=null;this.src=this.dataset.fallback" alt="{{ $product->name }}" loading="lazy">
                     <button class="favorite-btn" type="button" aria-label="Tambahkan {{ $product->name }} ke wishlist">♡</button>
                 </div>
                 <div class="product-info">
