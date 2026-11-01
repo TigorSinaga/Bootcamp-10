@@ -148,6 +148,8 @@ const initializeCategoryTable = async () => {
     });
 };
 
+import('./dashboard.js');
+
 const initializePageScripts = () => {
     initializeProductImageCroppers();
     initializeCategoryModal();

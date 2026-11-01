@@ -4,6 +4,17 @@
             <span class="brand-mark">r.</span>
             <span>ruang<span>belanja</span></span>
         </a>
+        <form class="search-box" action="{{ route('search') }}" method="GET" role="search">
+            <label class="search-icon" for="product-search" aria-hidden="true">⌕</label>
+            <input
+                id="product-search"
+                type="search"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Cari produk favoritmu..."
+                autocomplete="off">
+            <button class="search-shortcut" type="submit" aria-label="Cari produk">Cari</button>
+        </form>
         <div class="header-actions">
             <a class="header-action" href="#produk" aria-label="Wishlist"><span class="action-icon">♡</span><span>Wishlist</span></a>
             <a class="header-action" href="{{ route('cart') }}" aria-label="Keranjang belanja"><span class="action-icon">🛍️</span><span>Keranjang</span><span class="cart-count" id="cart-count">{{ $cartCount ?? 0 }}</span></a>
@@ -17,7 +28,10 @@
                     @auth
                     <li class="user-menu-heading">{{ auth()->user()->name }}</li>
                     <li><a href="{{ route('profile.edit') }}">Profil</a></li>
+                    @if (Auth::user()-> role === 'admin')
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+
+                    @endif
                     <li>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
@@ -31,4 +45,5 @@
                 </ul>
             </details>
         </div>
+    </div>
 </header>

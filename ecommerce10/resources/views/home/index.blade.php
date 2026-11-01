@@ -4,7 +4,7 @@
 
 @section('content')
 @php
-    /** @var \Illuminate\Pagination\LengthAwarePaginator $products */
+/** @var \Illuminate\Pagination\LengthAwarePaginator $products */
 @endphp
 @include('template.navbar')
 
@@ -22,7 +22,7 @@
             <div class="hero-image">
                 <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Suasana butik fashion dengan koleksi pilihan">
             </div>
-            <div class="hero-sticker"><strong>70% OFF</strong>pilihan spesial hari ini</div>
+            <div class="absolute hero-sticker"><strong>70% OFF</strong>pilihan spesial hari ini</div>
         </div>
     </section>
 
@@ -63,7 +63,7 @@
             <div class="deal-title"><span class="deal-bolt">⚡</span>
                 <div><strong>Flash sale hari ini</strong><span>Jangan sampai kehabisan, harga spesial segera berakhir!</span></div>
             </div>
-            <div class="countdown" aria-label="Waktu flash sale tersisa"><span class="time-box">05</span><span class="time-separator">:</span><span class="time-box">42</span><span class="time-separator">:</span><span class="time-box">18</span></div>
+            <div class="countdown" aria-label="Waktu flash sale tersisa"><span class="time-box time-box-hours">05</span><span class="time-separator">:</span><span class="time-box time-box-minutes">42</span><span class="time-separator">:</span><span class="time-box time-box-seconds">18</span></div>
             <a class="section-link" href="/search">Lihat semua <span aria-hidden="true">→</span></a>
         </div>
 
@@ -110,7 +110,7 @@
                 <h2>Diskon 15% untuk belanja pertamamu</h2>
                 <p>Kenalan dengan produk favoritmu, dengan harga yang lebih menyenangkan.</p>
             </div>
-            <div class="promo-code"><small>Gunakan kode promo</small><strong>HALO15</strong></div>
+            <div class="promo-code" id="copy-promo" data-code="HALO15" role="button" tabindex="0" title="Klik untuk salin kode promo"><small>Gunakan kode promo</small><strong>HALO15</strong><span class="copy-hint">Salin Kode 📋</span></div>
         </div>
         <section class="newsletter" aria-label="Berlangganan newsletter">
             <div>
@@ -126,78 +126,5 @@
 <div class="toast-message" id="toast-message" role="status" aria-live="polite" data-message="{{ session('success') ?? session('error') }}"></div>
 
 @push('scripts')
-<script>
-    const productCards = [...document.querySelectorAll('.product-card')];
-    const filterButtons = [...document.querySelectorAll('.filter-btn')];
-    const searchInput = document.querySelector('#product-search');
-    const toast = document.querySelector('#toast-message');
-    let activeCategory = 'semua';
-    let toastTimeout;
-
-    function updateProducts() {
-        const query = searchInput.value.trim().toLocaleLowerCase('id');
-        let visibleCount = 0;
-
-        productCards.forEach((card) => {
-            const matchesCategory = activeCategory === 'semua' || card.dataset.category === activeCategory;
-            const searchableText = [
-                card.dataset.name,
-                card.dataset.category,
-                card.dataset.categoryName
-            ].join(' ').toLocaleLowerCase('id');
-            const matchesSearch = searchableText.includes(query);
-            card.hidden = !(matchesCategory && matchesSearch);
-            if (!card.hidden) visibleCount += 1;
-        });
-
-        const existingEmptyState = document.querySelector('.empty-state');
-        if (visibleCount === 0 && !existingEmptyState) {
-            const emptyState = document.createElement('p');
-            emptyState.className = 'empty-state';
-            emptyState.textContent = 'Produk tidak ditemukan. Coba kata kunci atau kategori lain.';
-            document.querySelector('#product-grid').append(emptyState);
-        } else if (visibleCount > 0 && existingEmptyState) {
-            existingEmptyState.remove();
-        }
-    }
-
-    function selectCategory(category) {
-        activeCategory = category;
-        filterButtons.forEach((button) => {
-            button.classList.toggle('active', button.dataset.filter === category);
-        });
-        updateProducts();
-    }
-
-    filterButtons.forEach((button) => {
-        button.addEventListener('click', () => selectCategory(button.dataset.filter));
-    });
-
-    searchInput.addEventListener('input', updateProducts);
-
-    if (toast.dataset.message) {
-        toast.textContent = toast.dataset.message;
-        toast.classList.add('show');
-        toastTimeout = window.setTimeout(() => toast.classList.remove('show'), 2600);
-    }
-
-    document.querySelectorAll('.favorite-btn').forEach((button) => {
-        button.addEventListener('click', () => {
-            const isFavorite = button.textContent === '♥';
-            button.textContent = isFavorite ? '♡' : '♥';
-            button.style.color = isFavorite ? '' : '#fa6681';
-            button.setAttribute('aria-pressed', String(!isFavorite));
-        });
-    });
-
-    document.querySelector('#newsletter-form').addEventListener('submit', (event) => {
-        event.preventDefault();
-        toast.textContent = 'Terima kasih sudah berlangganan!';
-        toast.classList.add('show');
-        window.clearTimeout(toastTimeout);
-        toastTimeout = window.setTimeout(() => toast.classList.remove('show'), 2200);
-        event.currentTarget.reset();
-    });
-</script>
 @endpush
 @endsection

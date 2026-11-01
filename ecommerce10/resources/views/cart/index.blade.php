@@ -100,6 +100,9 @@
                 </strong>
             </div>
             <div class="shipping-progress" id="shipping-progress">
+                <div class="shipping-bar-track mb-2">
+                    <div class="shipping-bar-fill {{ $shippingFee === 0 ? 'is-free' : '' }}" id="shipping-bar-fill" style="width: {{ min(100, max(5, round(($subtotal / 100000) * 100))) }}%;"></div>
+                </div>
                 <span class="shipping-icon">🚚</span>
                 @if ($shippingFee === 0)
                 <span data-shipping-message>Yeay, kamu mendapatkan <strong>gratis ongkir!</strong></span>
@@ -131,92 +134,5 @@
 <div class="toast-message" id="toast-message" role="status" aria-live="polite" data-message="{{ session('error') }}"></div>
 
 @push('scripts')
-<script>
-    const toast = document.querySelector('#toast-message');
-    let toastTimeout;
-
-    function showCartMessage(message) {
-        toast.textContent = message;
-        toast.classList.add('show');
-        window.clearTimeout(toastTimeout);
-        toastTimeout = window.setTimeout(() => toast.classList.remove('show'), 2600);
-    }
-
-    function formatCartPrice(amount) {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            maximumFractionDigits: 0,
-        }).format(amount);
-    }
-
-    document.querySelectorAll('.cart-quantity-form').forEach((form) => {
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const button = form.querySelector('button[type="submit"]');
-            const item = form.closest('.cart-item');
-            const quantityForms = item.querySelectorAll('.cart-quantity-form');
-            let updateSucceeded = false;
-            button.disabled = true;
-
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: new FormData(form),
-                    headers: {
-                        Accept: 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                });
-                const result = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(result.message || 'Jumlah produk gagal diperbarui.');
-                }
-                updateSucceeded = true;
-
-                const quantity = Number(result.quantity);
-                const quantityValue = item.querySelector('[data-quantity-value]');
-                quantityValue.textContent = quantity;
-                quantityForms.forEach((quantityForm) => {
-                    const quantityButton = quantityForm.querySelector('button');
-                    const step = Number(quantityButton.dataset.quantityStep);
-                    quantityForm.querySelector('input[name="quantity"]').value = Math.max(1, quantity + step);
-                    quantityButton.disabled = step < 0 ?
-                        quantity <= 1 :
-                        quantity >= Number(item.dataset.stock);
-                });
-
-                const summaryItem = document.querySelector(`[data-summary-product-id="${result.productId}"]`);
-                summaryItem.querySelector('[data-summary-quantity]').textContent = quantity;
-                summaryItem.querySelector('[data-summary-total]').textContent = formatCartPrice(result.itemTotal);
-
-                document.querySelector('#cart-item-count').textContent = `${result.cartCount} item`;
-                document.querySelector('#summary-quantity').textContent = `(${result.cartCount} item)`;
-                document.querySelector('#cart-subtotal').textContent = formatCartPrice(result.subtotal);
-                document.querySelector('#shipping-fee').textContent = result.shippingFee === 0 ?
-                    'Gratis' :
-                    formatCartPrice(result.shippingFee);
-                document.querySelector('#shipping-fee').classList.toggle('free-shipping', result.shippingFee === 0);
-                document.querySelector('#cart-total').textContent = formatCartPrice(result.total);
-                document.querySelector('[data-shipping-message]').textContent = result.shippingMessage;
-
-                const cartCount = document.querySelector('#cart-count');
-                if (cartCount) cartCount.textContent = result.cartCount;
-                showCartMessage(result.message);
-            } catch (error) {
-                showCartMessage(error.message || 'Terjadi kesalahan saat memperbarui jumlah.');
-            } finally {
-                if (!updateSucceeded) button.disabled = false;
-            }
-        });
-    });
-
-    if (toast.dataset.message) {
-        toast.textContent = toast.dataset.message;
-        toast.classList.add('show');
-        window.setTimeout(() => toast.classList.remove('show'), 2600);
-    }
-</script>
 @endpush
 @endsection
