@@ -45,7 +45,16 @@ class ProductController extends Controller
 
         $products = $query->paginate(10)->withQueryString();
         $categories = ProductCategory::all();
-        return view("admin.products.index", compact('products', 'categories'));
+        $totalStock = Product::sum('stock');
+        $lowStockCount = Product::where('stock', '<=', 10)->count();
+        $uncategorizedCount = Product::whereNull('product_category_id')->count();
+        return view("admin.products.index", compact(
+            'products',
+            'categories',
+            'totalStock',
+            'lowStockCount',
+            'uncategorizedCount'
+        ));
     }
 
     /**

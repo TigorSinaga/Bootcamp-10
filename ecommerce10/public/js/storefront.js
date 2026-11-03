@@ -375,4 +375,74 @@
     if (initialMessage && initialMessage.trim()) {
         showMessage(initialMessage.trim());
     }
+
+    // ── Admin Table and Filter Enhancements ──
+    document.querySelectorAll('.product-admin-table tbody tr, .category-admin-table tbody tr').forEach((row, index) => {
+        row.classList.add('rb-table-row-enter');
+        row.style.animationDelay = `${Math.min(index * 45, 360)}ms`;
+    });
+
+    document.querySelectorAll('.product-admin-alert, .category-admin-alert').forEach((alert) => {
+        const dismiss = () => {
+            alert.classList.add('is-dismissed');
+            window.setTimeout(() => alert.remove(), 400);
+        };
+        alert.querySelector('.product-admin-alert-close, .category-admin-alert-close')?.addEventListener('click', dismiss);
+        window.setTimeout(dismiss, 6000);
+    });
+
+    const productFilter = document.querySelector('.product-admin-filter-bar');
+    if (productFilter) {
+        let searchTimer;
+        const search = productFilter.querySelector('#product-search-filter');
+        search?.addEventListener('input', () => {
+            window.clearTimeout(searchTimer);
+            searchTimer = window.setTimeout(() => productFilter.requestSubmit(), 650);
+        });
+        productFilter.querySelectorAll('#category-filter, #sort-filter').forEach((select) => {
+            select.addEventListener('change', () => productFilter.requestSubmit());
+        });
+    }
+
+    document.querySelectorAll('.rb-count-up').forEach((element) => {
+        const target = Number(element.dataset.target || 0);
+        const duration = 900;
+        const startedAt = performance.now();
+        const tick = (now) => {
+            const progress = Math.min((now - startedAt) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            element.textContent = Math.round(target * eased).toLocaleString('id-ID');
+            if (progress < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+    });
+
+    // ── Delete Confirmation Modal ──
+    let pendingDeleteForm = null;
+    const deleteModalElement = document.querySelector('#deleteConfirmModal');
+    document.querySelectorAll('.rb-delete-trigger').forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+            pendingDeleteForm = trigger.closest('.rb-delete-form');
+            if (!pendingDeleteForm || pendingDeleteForm.dataset.deleteId !== trigger.dataset.deleteId) {
+                pendingDeleteForm = null;
+                showMessage('Data tidak valid untuk dihapus.', 'error');
+                return;
+            }
+            const name = trigger.dataset.deleteName || 'item ini';
+            const type = trigger.dataset.deleteType || 'item';
+            document.querySelector('#delete-confirm-name').textContent = name;
+            document.querySelector('#delete-confirm-type').textContent = type;
+            const note = document.querySelector('#delete-confirm-note');
+            if (note) {
+                note.textContent = trigger.dataset.deleteNote || 'akan dihapus secara permanen. Apakah Anda yakin?';
+            }
+            if (window.bootstrap?.Modal && deleteModalElement) {
+                window.bootstrap.Modal.getOrCreateInstance(deleteModalElement).show();
+            }
+        });
+    });
+    document.querySelector('#delete-confirm-submit')?.addEventListener('click', () => {
+        if (!pendingDeleteForm) return;
+        pendingDeleteForm.submit();
+    });
 })();

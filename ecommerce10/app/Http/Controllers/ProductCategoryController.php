@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductCategory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -35,6 +36,10 @@ class ProductCategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate(['name' => ['required', 'string', 'max:255', 'unique:product_categories,name']]);
+        $name_check = ProductCategory::where('name', $validated['name'])->exists();
+        if ($name_check) {
+            return redirect()->route('product-categories.index')->with('error', 'Kategori sudah ada.');
+        }
         ProductCategory::create(['name' => $validated['name'], 'slug' => Str::slug($validated['name'])]);
         return redirect()->route('product-categories.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
@@ -58,7 +63,12 @@ class ProductCategoryController extends Controller
 
     public function destroy(ProductCategory $productCategory)
     {
-        $productCategory->delete();
-        return redirect()->route('product-categories.index')->with('success', 'Kategori berhasil dihapus.');
+        DB::transaction(function () use ($productCategory) {
+            $productCategory->products()->update(['product_category_id' => null]);
+            $productCategory->delete();
+        });
+
+        return redirect()->route('product-categories.index')
+            ->with('success', 'Kategori berhasil dihapus. Produk terkait sekarang tidak memiliki kategori.');
     }
 }

@@ -1,5 +1,22 @@
 <x-app-layout>
+    @push('styles')
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    @endpush
     <div class="product-admin-page">
+        <div class="db-header admin-index-header">
+            <div class="db-header-left">
+                <h1>Manajemen Produk</h1>
+                <p>Kelola katalog toko dengan ringkasan stok dan kategori secara real-time.</p>
+                <span class="db-header-badge">Live</span>
+            </div>
+            <a href="{{ route('products.create') }}" class="product-admin-add">＋ Tambah Produk</a>
+        </div>
+        <div class="db-stats admin-index-stats">
+            <div class="db-stat"><div class="db-stat-icon icon-purple">📦</div><div class="db-stat-body"><div class="db-stat-label">Total Produk</div><div class="db-stat-value rb-count-up" data-target="{{ $products->total() }}">0</div><div class="db-stat-sub">Produk terdaftar</div></div></div>
+            <div class="db-stat"><div class="db-stat-icon icon-green">📊</div><div class="db-stat-body"><div class="db-stat-label">Total Stok</div><div class="db-stat-value rb-count-up" data-target="{{ $totalStock }}">0</div><div class="db-stat-sub">Unit tersedia</div></div></div>
+            <div class="db-stat"><div class="db-stat-icon icon-orange">⚠️</div><div class="db-stat-body"><div class="db-stat-label">Stok Rendah</div><div class="db-stat-value rb-count-up" data-target="{{ $lowStockCount }}">0</div><div class="db-stat-sub">Produk perlu restock</div></div></div>
+            <div class="db-stat"><div class="db-stat-icon icon-blue">🏷️</div><div class="db-stat-body"><div class="db-stat-label">Tanpa Kategori</div><div class="db-stat-value rb-count-up" data-target="{{ $uncategorizedCount }}">0</div><div class="db-stat-sub">Produk belum dikelompokkan</div></div></div>
+        </div>
         <div class="product-admin-heading">
             <div>
                 <span class="dashboard-kicker">MANAJEMEN TOKO</span>
@@ -95,10 +112,10 @@
                                 <div class="product-admin-actions">
                                     <a href="{{ route('products.show', $product) }}" class="product-action view" title="Lihat produk" aria-label="Lihat {{ $product->name }}">👁</a>
                                     <a href="{{ route('products.edit', $product) }}" class="product-action edit" title="Edit produk">✎</a>
-                                    <form action="{{ route('products.destroy', $product) }}" method="POST" onsubmit="return confirm('Hapus produk {{ addslashes($product->name) }}?')">
+                                    <form action="{{ route('products.destroy', $product) }}" method="POST" class="rb-delete-form" data-delete-id="{{ $product->id }}" data-delete-url="{{ route('products.destroy', $product) }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="product-action delete" title="Hapus produk">⌫</button>
+                                        <button type="button" class="product-action delete rb-delete-trigger" title="Hapus produk" data-delete-id="{{ $product->id }}" data-delete-name="{{ e($product->name) }}" data-delete-type="produk">⌫</button>
                                     </form>
                                 </div>
                             </td>
@@ -116,5 +133,18 @@
             <div class="product-admin-pagination">{{ $products->onEachSide(1)->links() }}</div>
             @endif
         </section>
+    </div>
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content delete-confirm-modal">
+                <div class="delete-confirm-icon" aria-hidden="true">!</div>
+                <h2 id="deleteConfirmModalLabel">Hapus <span id="delete-confirm-type">item</span> ini?</h2>
+                <p><strong id="delete-confirm-name"></strong> akan dihapus secara permanen. Apakah Anda yakin?</p>
+                <div class="delete-confirm-actions">
+                    <button type="button" class="delete-confirm-cancel" data-bs-dismiss="modal">Tidak</button>
+                    <button type="button" class="delete-confirm-submit" id="delete-confirm-submit">Ya, hapus</button>
+                </div>
+            </div>
+        </div>
     </div>
 </x-app-layout>
