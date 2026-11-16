@@ -94,7 +94,7 @@
                                 @if ($product->product_category)
                                 <span class="product-category">{{ $product->product_category->name }}</span>
                                 @endif
-                                <a class="product-name" href="{{ route('search', ['search' => $product->name]) }}">{{ $product->name }}</a>
+                                <a class="product-name" href="{{ route('products.show.public', $product) }}">{{ $product->name }}</a>
                                 <p class="product-description">{{ \Illuminate\Support\Str::limit($product->description, 90) }}</p>
                                 <div class="price-row">
                                     <span class="price">Rp{{ number_format($product->price, 0, ',', '.') }}</span>

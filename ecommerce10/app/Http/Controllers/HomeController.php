@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -23,6 +23,13 @@ class HomeController extends Controller
             'home.index',
             compact('products', 'categories')
         );
+    }
+
+    public function show(Product $product): View
+    {
+        $product->increment('clicks');
+        $product->load('product_category');
+        return view('product.show', compact('product'));
     }
 
     public function search(Request $request): View

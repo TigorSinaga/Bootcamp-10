@@ -60,8 +60,8 @@ class DashboardController extends Controller
         $latestProducts = Product::with('product_category')->latest()->take(5)->get();
         $latestOrders   = Order::with('user')->latest()->take(5)->get();
 
-        // Product clicks dummy (no real tracking yet)
-        $productClicks = 4821;
+        // Product clicks sum from database
+        $productClicks = (int) Product::sum('clicks');
 
         return view('admin.dashboard', compact(
             'productCount', 'categoryCount', 'userCount', 'orderCount',
