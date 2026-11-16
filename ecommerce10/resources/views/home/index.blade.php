@@ -22,7 +22,7 @@
             <div class="hero-image">
                 <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Suasana butik fashion dengan koleksi pilihan">
             </div>
-            <div class="absolute hero-sticker"><strong>70% OFF</strong>pilihan spesial hari ini</div>
+            <div class="absolute hero-sticker">pilihan spesial hari ini</div>
         </div>
     </section>
 
@@ -32,7 +32,7 @@
                 <div class="section-kicker">Cari yang kamu butuhkan</div>
                 <h2>Belanja berdasarkan kategori</h2>
             </div>
-            <a class="section-link" href="#produk">Lihat semua <span aria-hidden="true">→</span></a>
+            <a class="section-link" href="{{ route('search') }}">Lihat semua <span aria-hidden="true">→</span></a>
         </div>
         <div class="category-grid">
             @foreach ($categories as $category)
@@ -44,15 +44,32 @@
         </div>
         <div class="benefit-row">
             <div class="benefit">
-                <div class="benefit-icon">🚚</div>
+                <div class="benefit-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10" />
+                        <path d="M15 18H9" />
+                        <path d="M18 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 16.52 8H14" />
+                        <circle cx="7" cy="18" r="2" />
+                        <circle cx="17" cy="18" r="2" />
+                    </svg>
+                </div>
                 <div><strong>Gratis ongkir</strong><span>Untuk pesanan mulai Rp100.000</span></div>
             </div>
             <div class="benefit">
-                <div class="benefit-icon">🛡️</div>
+                <div class="benefit-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
+                    </svg>
+                </div>
                 <div><strong>Belanja aman</strong><span>Transaksi nyaman dan terlindungi</span></div>
             </div>
             <div class="benefit">
-                <div class="benefit-icon">↩️</div>
+                <div class="benefit-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                        <path d="M3 3v5h5" />
+                    </svg>
+                </div>
                 <div><strong>Garansi mudah</strong><span>Pengembalian tanpa ribet</span></div>
             </div>
         </div>
@@ -60,11 +77,16 @@
 
     <section class="section" id="produk">
         <div class="deal-banner">
-            <div class="deal-title"><span class="deal-bolt">⚡</span>
+            <div class="deal-title">
+                <span class="deal-bolt">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                    </svg>
+                </span>
                 <div><strong>Flash sale hari ini</strong><span>Jangan sampai kehabisan, harga spesial segera berakhir!</span></div>
             </div>
             <div class="countdown" aria-label="Waktu flash sale tersisa"><span class="time-box time-box-hours">05</span><span class="time-separator">:</span><span class="time-box time-box-minutes">42</span><span class="time-separator">:</span><span class="time-box time-box-seconds">18</span></div>
-            <a class="section-link" href="/search">Lihat semua <span aria-hidden="true">→</span></a>
+            <a class="section-link" href="{{ route('search') }}">Lihat semua <span aria-hidden="true">→</span></a>
         </div>
 
         <div class="section-heading product-heading">
@@ -72,7 +94,7 @@
                 <div class="section-kicker">Dikurasi khusus untukmu</div>
                 <h2>Produk pilihan minggu ini</h2>
             </div>
-            <a class="section-link" href="/search">Jelajahi produk <span aria-hidden="true">→</span></a>
+            <a class="section-link" href="{{ route('search') }}">Jelajahi produk <span aria-hidden="true">→</span></a>
         </div>
         <div class="filter-row" role="group" aria-label="Filter produk">
             <button class="filter-btn active" type="button" data-filter="semua">Semua</button>

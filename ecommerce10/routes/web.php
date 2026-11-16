@@ -7,10 +7,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('search', [HomeController::class, 'search'])->name('search');
 Route::get('products', fn() => 'Products Page');
@@ -22,10 +18,18 @@ Route::get('checkout', [OrderController::class, 'create'])->name('checkout');
 Route::post('checkout', [OrderController::class, 'store'])->name('checkout.store');
 Route::get('invoice', [OrderController::class, 'invoice'])->name('invoice');
 
+Route::middleware('auth')->group(function () {
+    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+});
+
 Route::prefix('dashboard')->middleware(['admin'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('products', \App\Http\Controllers\ProductController::class);
     Route::resource('product-categories', \App\Http\Controllers\ProductCategoryController::class)->except(['show', 'create', 'edit']);
+    Route::get('orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('admin.orders.index');
+    Route::get('orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('admin.orders.show');
+    Route::patch('orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('admin.orders.update-status');
 });
 
 Route::middleware('auth')->group(function () {

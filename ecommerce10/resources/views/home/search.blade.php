@@ -36,7 +36,7 @@
                     </div>
 
                     <fieldset class="search-filter-group">
-                        <h4>Kategori</h4>
+                        <legend>Kategori</legend>
                         @foreach ($categories as $item)
                         <label class="filter-option">
                             <input
@@ -50,7 +50,7 @@
                     </fieldset>
 
                     <fieldset class="search-filter-group">
-                        <h4>Rentang Harga</h4>
+                        <legend>Rentang Harga</legend>
                         <label class="price-filter-field" for="min-price">
                             <span>Harga minimum</span>
                             <input id="min-price" type="number" name="min_price" min="0" step="1000" value="{{ $minPrice }}" placeholder="Rp minimum">
@@ -88,12 +88,13 @@
                                     onerror="this.onerror=null;this.src=this.dataset.fallback"
                                     alt="{{ $product->name }}"
                                     loading="lazy">
+                                <button class="favorite-btn" type="button" aria-label="Tambahkan {{ $product->name }} ke wishlist">♡</button>
                             </div>
                             <div class="product-info">
                                 @if ($product->product_category)
                                 <span class="product-category">{{ $product->product_category->name }}</span>
                                 @endif
-                                <h3 class="product-name">{{ $product->name }}</h3>
+                                <a class="product-name" href="{{ route('search', ['search' => $product->name]) }}">{{ $product->name }}</a>
                                 <p class="product-description">{{ \Illuminate\Support\Str::limit($product->description, 90) }}</p>
                                 <div class="price-row">
                                     <span class="price">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
@@ -109,7 +110,9 @@
                     </div>
                     @else
                     <div class="empty-state">
-                        <div class="search-empty-icon" aria-hidden="true">⌕</div>
+                        <div class="search-empty-icon" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        </div>
                         <h3>Produk belum ditemukan</h3>
                         <p>Coba ubah kategori atau rentang harga filter yang dipilih.</p>
                         <a href="{{ route('search') }}" class="primary-btn">Lihat semua produk <span aria-hidden="true">→</span></a>
@@ -131,15 +134,5 @@
 <div class="toast-message" id="toast-message" role="status" aria-live="polite" data-message="{{ session('success') ?? session('error') }}"></div>
 
 @push('scripts')
-<script>
-    const toast = document.querySelector('#toast-message');
-    let toastTimeout;
-
-    if (toast.dataset.message) {
-        toast.textContent = toast.dataset.message;
-        toast.classList.add('show');
-        toastTimeout = window.setTimeout(() => toast.classList.remove('show'), 2600);
-    }
-</script>
 @endpush
 @endsection

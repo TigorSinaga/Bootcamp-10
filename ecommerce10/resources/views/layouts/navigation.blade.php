@@ -23,6 +23,9 @@
                     <x-nav-link :href="route('product-categories.index')" :active="request()->routeIs('product-categories.*')">
                         {{ __('Product Categories') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
+                        {{ __('Orders') }}
+                    </x-nav-link>
                     @endif
                 </div>
             </div>
@@ -45,6 +48,9 @@
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('orders.index')">
+                            {{ __('Pesanan Saya') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -85,6 +91,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('product-categories.index')" :active="request()->routeIs('product-categories.index')">
                 {{ __('Product Categories') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
+                {{ __('Orders') }}
             </x-responsive-nav-link>
             @endif
         </div>

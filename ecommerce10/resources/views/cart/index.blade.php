@@ -33,7 +33,7 @@
                 @foreach ($items as $item)
                 @php($product = $item['product'])
                 <article class="cart-item" data-product-id="{{ $product->id }}" data-stock="{{ $product->stock }}">
-                    <a class="cart-item-image" href="{{ url('/products') }}" tabindex="-1" aria-hidden="true">
+                    <a class="cart-item-image" href="{{ route('search', ['search' => $product->name]) }}" tabindex="-1" aria-hidden="true">
                         <img
                             src="{{ asset('storage/' . $product->image) }}"
                             data-fallback="{{ asset('images/product-placeholder.svg') }}"
@@ -103,7 +103,9 @@
                 <div class="shipping-bar-track mb-2">
                     <div class="shipping-bar-fill {{ $shippingFee === 0 ? 'is-free' : '' }}" id="shipping-bar-fill" style="width: {{ min(100, max(5, round(($subtotal / 100000) * 100))) }}%;"></div>
                 </div>
-                <span class="shipping-icon">🚚</span>
+                <span class="shipping-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10"/><path d="M15 18H9"/><path d="M18 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 16.52 8H14"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+                </span>
                 @if ($shippingFee === 0)
                 <span data-shipping-message>Yeay, kamu mendapatkan <strong>gratis ongkir!</strong></span>
                 @else
@@ -116,13 +118,17 @@
                 <strong id="cart-total" data-value="{{ $total }}">Rp{{ number_format($total, 0, ',', '.') }}</strong>
             </div>
             <a class="checkout-btn" href="{{ route('checkout') }}">Lanjut ke pembayaran <span aria-hidden="true">→</span></a>
-            <div class="secure-note"><span aria-hidden="true">🔒</span> Transaksimu aman dan terlindungi</div>
-            <div class="payment-note"><span>💳</span><span>Transfer bank</span><span>📱</span><span>E-wallet</span><span>🏪</span><span>Minimarket</span></div>
+            <div class="secure-note">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Transaksimu aman dan terlindungi
+            </div>
         </aside>
     </div>
     @else
     <section class="cart-empty" id="cart-empty">
-        <div class="empty-cart-icon">🛍️</div>
+        <div class="empty-cart-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        </div>
         <h2>Keranjangmu masih kosong</h2>
         <p>Yuk, temukan sesuatu yang kamu suka dan simpan di sini.</p>
         <a class="checkout-btn empty-cart-btn" href="{{ route('home') }}#produk">Mulai belanja <span aria-hidden="true">→</span></a>
